@@ -1,0 +1,5 @@
+{
+  "name": "prompt-optimierer",
+  "owner": { "name": "Norelva" },
+  "plugins": [{ "name": "prompt-optimierer", "source": "./" }]
+}

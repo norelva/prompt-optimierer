@@ -1,0 +1,8 @@
+{
+  "name": "prompt-optimierer",
+  "version": "0.1.0",
+  "description": "Knopf über der Chatzeile: formuliert den getippten Prompt in einen klaren, optimalen Prompt um",
+  "author": { "name": "Norelva" },
+  "license": "MIT",
+  "types": "./types/index.d.ts"
+}
