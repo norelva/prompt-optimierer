@@ -8,7 +8,7 @@ So geht's:
 3. Der optimierte Prompt ersetzt den Entwurf in der Chatzeile. Prüfen, ggf. anpassen, absenden.
 4. Gefällt er nicht: **Original zurück** stellt den ursprünglichen Text wieder her.
 
-Unklare Stellen werden nicht geraten, sondern als „Offen: …“ markiert. Es wird nichts automatisch abgesendet.
+Unklare Stellen werden nicht geraten: Der optimierte Prompt weist den Chat an, vor dem Start Rückfragen zu stellen. Der Originaltext wird wörtlich als Kontext unten angehängt (bei Widerspruch gilt der Auftrag oben). Es wird nichts automatisch abgesendet.
 Kosten: ein kurzer Modellaufruf pro Klick über das eigene Claude-Konto.
 
 ## Installation

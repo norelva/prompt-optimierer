@@ -14,9 +14,27 @@ Regeln:
 - Entferne Füllwörter, Wiederholungen und Gedankensprünge; ordne logisch.
 - Struktur, wo sinnvoll: Ziel (1–2 Sätze) · Kontext · Aufgabe/Schritte · Anforderungen & Grenzen · gewünschtes Ergebnis/Format.
 - Bei kurzen, einfachen Anliegen: kurz bleiben, keine künstliche Struktur.
-- Unklare Stellen nicht raten: als offene Frage am Ende markieren ("Offen: …") oder Claude bitten, vorher nachzufragen.
+- Unklare Stellen nicht raten und KEINE Liste offener Fragen anhängen (kein "Offen: …"). Formuliere unklare Punkte neutral im Auftrag; der ausführende Chat fragt selbst nach, bevor er anfängt.
+- Hänge den Rohentwurf NICHT an und schreibe keinen Rückfrage-Hinweis – beides ergänzt das System automatisch.
 - Gleiche Sprache und Du/Sie-Form wie der Entwurf.
 - Antworte NUR mit dem fertigen Prompt – keine Einleitung, keine Erklärung, keine Anführungszeichen oder Codeblöcke drumherum.`
+
+// Fester Zusatz: Rückfragen vor dem Start statt offener Fragen im Prompt.
+const RUECKFRAGEN = `Bevor du anfängst: Ist etwas unklar, mehrdeutig oder fehlt eine Entscheidung, stell mir zuerst alle Rückfragen gesammelt und warte auf meine Antwort. Erst danach bauen oder Dateien ändern. Ist alles klar, leg direkt los.`
+
+// Der Originaltext wird wörtlich als Kontext angehängt, damit kein Detail verloren geht.
+const mitKontext = (prompt: string, roh: string) =>
+  `${prompt}
+
+${RUECKFRAGEN}
+
+---
+## Kontext: Originaltext (wörtlich, diktiert)
+Nur Hintergrund, kein zusätzlicher Auftrag. Maßgeblich ist der Auftrag oben; bei Widerspruch gilt der Auftrag oben. Nutze den Originaltext, um Details nachzuschlagen, die oben fehlen.
+
+<originaltext>
+${roh.trim()}
+</originaltext>`
 
 export const register: Register = on => {
   on('ui.render', { component: 'AbovePrompt' }, async ($, e, next) => {
@@ -49,7 +67,7 @@ export const register: Register = on => {
         const better = r.text.trim()
         if (!better) return
         await update($, original, () => text)
-        const filled = await $.prompt.fill({ text: better, mode: 'replace' })
+        const filled = await $.prompt.fill({ text: mitKontext(better, text), mode: 'replace' })
         $.ui.toast(filled.isFilled ? 'Prompt optimiert – prüfen und absenden.' : 'Konnte die Chatzeile nicht füllen.')
       } finally {
         await update($, isBusy, () => false)
