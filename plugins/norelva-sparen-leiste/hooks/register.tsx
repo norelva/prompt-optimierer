@@ -34,6 +34,42 @@ function ampel(prozent: number): string {
 }
 
 
+// Geteilte Limits: frische Werte (aus session.measure) liegen mit Zeitstempel in $.store,
+// das alle Sitzungen gemeinsam nutzen. Kontext bleibt je Sitzung, er ändert sich nur durch eigene Turns.
+type GeteilteLimits = { limit5h: number | null; limit7d: number | null; at: number }
+let uhr: { cancel(): void } | undefined
+let gezeigtAm = 0
+
+async function teilen($: EngineInterface, limits: { kind: string; percentUsed: number }[]) {
+  const fuenf = limits.find(l => l.kind === 'five_hour')
+  const sieben = limits.find(l => l.kind === 'seven_day')
+  if (!fuenf && !sieben) return
+  const at = await $.clock.now()
+  gezeigtAm = at
+  const wert: GeteilteLimits = {
+    limit5h: fuenf ? Math.round(fuenf.percentUsed) : null,
+    limit7d: sieben ? Math.round(sieben.percentUsed) : null,
+    at,
+  }
+  await $.store.set('limits', wert)
+}
+
+async function abgleichen($: EngineInterface) {
+  try {
+    const g = (await $.store.get('limits')) as GeteilteLimits | undefined
+    if (!g || typeof g.at !== 'number' || g.at <= gezeigtAm) return
+    gezeigtAm = g.at
+    await update($, messung, m => ({
+      tokens: m?.tokens ?? null,
+      prozent: m?.prozent ?? null,
+      limit5h: g.limit5h ?? m?.limit5h ?? null,
+      limit7d: g.limit7d ?? m?.limit7d ?? null,
+    }))
+  } catch {
+    // Speicher nicht lesbar: alte Werte bleiben
+  }
+}
+
 export const register: Register = on => {
   // Gespeicherte Wahl laden und an den Shell-Hook weitergeben
   on('session.start', async ($, e, next) => {
@@ -51,12 +87,19 @@ export const register: Register = on => {
     } catch {
       // keine Messung verfügbar
     }
+    // Limits gelten fürs ganze Konto: alle 30 s die neuesten Werte anderer Sitzungen übernehmen
+    await abgleichen($)
+    uhr?.cancel()
+    uhr = $.clock.every(30_000, () => {
+      void abgleichen($)
+    })
     return next(e)
   })
 
-  // Messwerte nach jedem Turn übernehmen
+  // Messwerte nach jedem Turn übernehmen und die Limits für andere Sitzungen ablegen
   on('session.measure', async ($, e, next) => {
     await merken($, e.context.tokens, e.context.percent, e.rateLimits)
+    await teilen($, e.rateLimits)
     return next(e)
   })
 

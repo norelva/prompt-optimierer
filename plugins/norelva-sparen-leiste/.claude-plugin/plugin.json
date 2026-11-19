@@ -1,6 +1,6 @@
 {
   "name": "norelva-sparen-leiste",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Leiste über der Chatzeile: Sparmodus an/aus, Modell der Subagents, Kontext- und Limitanzeige, Übergabe-Knopf",
   "author": {
     "name": "Norelva"
