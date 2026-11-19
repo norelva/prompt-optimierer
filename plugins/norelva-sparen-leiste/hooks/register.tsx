@@ -15,6 +15,8 @@ const aktiv = atom({ plugin: 'norelva-sparen-leiste', key: 'aktiv' } as const, t
 const agentModell = atom({ plugin: 'norelva-sparen-leiste', key: 'agentModell' } as const, 'sonnet' as AgentModell)
 const messung = atom({ plugin: 'norelva-sparen-leiste', key: 'messung' } as const, null as Messung)
 
+// Mitteilungen rechts verschwinden nach 1 s von selbst
+const KURZ = { timeoutMs: 1000 }
 const TEUER = /opus|fable/i
 const FOLGE: AgentModell[] = ['sonnet', 'haiku', 'opus', 'fable']
 const NAME: Record<AgentModell, string> = { sonnet: 'Sonnet', haiku: 'Haiku', opus: 'Opus', fable: 'Fable' }
@@ -149,16 +151,16 @@ async function zeile($: EngineInterface, e: Parameters<typeof $.ui.resolve>[0], 
       const neu = await update($, aktiv, v => !v)
       await $.store.set('aktiv', neu)
       await $.env.set('NORELVA_SPAREN_AUS', neu ? undefined : '1')
-      $.ui.toast(neu ? 'Sparmodus an' : 'Sparmodus aus – alles läuft wie ohne Plugin')
+      $.ui.toast(neu ? 'Sparmodus an' : 'Sparmodus aus – alles läuft wie ohne Plugin', KURZ)
     }
     const modellWechseln = async () => {
       const neu = await update($, agentModell, v => FOLGE[(FOLGE.indexOf(v) + 1) % FOLGE.length] ?? 'sonnet')
       await $.store.set('agentModell', neu)
-      $.ui.toast(HINWEIS[neu])
+      $.ui.toast(HINWEIS[neu], KURZ)
     }
     const uebergabe = async () => {
       if (laeuft) {
-        $.ui.toast('Erst wenn Claude fertig ist.')
+        $.ui.toast('Erst wenn Claude fertig ist.', KURZ)
         return
       }
       await $.command.run({ command: 'norelva-sparen:uebergabe' })
