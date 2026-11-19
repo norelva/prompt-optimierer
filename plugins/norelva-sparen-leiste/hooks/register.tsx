@@ -81,9 +81,10 @@ export const register: Register = on => {
       $.ui.invalidate('ui.render')
     }
     return (
-      <Box flexDirection="row" alignItems="center" columnGap={2} flexWrap="nowrap">
-        {fremd}
+      // Sparen-Knöpfe links, "Prompt optimieren" immer ganz rechts in der Zeile
+      <Box flexDirection="row" alignItems="center" justifyContent="space-between" width="100%" columnGap={2} flexWrap="nowrap">
         {await zeile($, e, e.props.isWorking)}
+        <Box flexShrink={0}>{fremd}</Box>
       </Box>
     )
   })
