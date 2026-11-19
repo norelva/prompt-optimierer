@@ -19,7 +19,7 @@ Grundlast laut `claude plugin details`: etwa 720 Tokens pro Sitzung (Beschreibun
 
 ## Leiste über der Chatzeile (Mod `norelva-sparen-leiste`, Ordner `leiste/`)
 
-Alles steht in einer Zeile, rechts neben „Prompt optimieren“. Fehlt der Prompt-Optimierer, bekommt die Leiste eine eigene Zeile.
+Alles steht in einer Zeile, „Prompt optimieren“ ganz rechts (ab Prompt-Optimierer 0.3.1). Fehlt der Prompt-Optimierer, steht die Leiste allein in ihrer Zeile.
 
 | Knopf / Anzeige | Wirkung |
 |---|---|

@@ -1,5 +1,5 @@
 import { atom, read, update } from 'claude-code'
-import type { Register } from 'claude-code'
+import type { EngineInterface, Register } from 'claude-code'
 
 import type { Original } from '../types'
 
@@ -37,9 +37,40 @@ ${roh.trim()}
 </originaltext>`
 
 export const register: Register = on => {
-  on('ui.render', { component: 'AbovePrompt' }, async ($, e, next) => {
-    if (e.props.hasSurvey) return next(e)
+  // Eine Zeile: Ist die Sparen-Leiste da, hängt sich "Prompt optimieren" rechts an ihre Zeile
+  // (die Lücke dazwischen füllt ein Abstandhalter). Ohne Leiste zeichnet der Optimierer eine eigene Zeile.
+  let kombiniert = false
+  on('ui.render', { component: 'AbovePrompt', plugin: 'norelva-sparen-leiste' }, async ($, e, next) => {
+    const leiste = await next(e)
+    if (e.props.hasSurvey) return leiste
+    if (!kombiniert) {
+      kombiniert = true
+      $.ui.invalidate('ui.render')
+    }
+    const { Box } = $.ui.resolve(e)
+    return (
+      <Box flexDirection="row" alignItems="center" width="100%" flexWrap="nowrap" columnGap={2}>
+        {leiste}
+        <Box flexGrow={1} />
+        <Box flexShrink={0}>{await knoepfe($, e)}</Box>
+      </Box>
+    )
+  })
 
+  on('ui.render', { component: 'AbovePrompt' }, async ($, e, next) => {
+    if (e.props.hasSurvey || kombiniert) return next(e)
+    return knoepfe($, e)
+  })
+
+  // Nach dem Absenden ist das gemerkte Original nicht mehr nötig.
+  on('prompt.submit', async ($, e, next) => {
+    await update($, original, () => null).catch(() => undefined)
+    return next(e)
+  })
+}
+
+async function knoepfe($: EngineInterface, e: Parameters<typeof $.ui.resolve>[0]) {
+  {
     const busy = await read($, isBusy)
     const before = await read($, original)
     const { Box, Button, Text } = $.ui.resolve(e)
@@ -97,11 +128,5 @@ export const register: Register = on => {
         ) : null}
       </Box>
     )
-  })
-
-  // Nach dem Absenden ist das gemerkte Original nicht mehr nötig.
-  on('prompt.submit', async ($, e, next) => {
-    await update($, original, () => null).catch(() => undefined)
-    return next(e)
-  })
+  }
 }

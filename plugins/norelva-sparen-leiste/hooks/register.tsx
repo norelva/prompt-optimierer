@@ -114,28 +114,10 @@ export const register: Register = on => {
     return yield* next(e)
   })
 
-  // Eine Zeile mit "Prompt optimieren": die Zeile des Prompt-Optimierers um die Sparen-Knöpfe ergänzen.
-  // Ist der Prompt-Optimierer nicht da, zeichnet die Leiste eine eigene Zeile.
-  let kombiniert = false
-  on('ui.render', { component: 'AbovePrompt', plugin: 'prompt-optimierer' }, async ($, e, next) => {
-    const fremd = await next(e)
-    if (e.props.hasSurvey) return fremd
-    const { Box } = $.ui.resolve(e)
-    if (!kombiniert) {
-      kombiniert = true
-      $.ui.invalidate('ui.render')
-    }
-    return (
-      // Sparen-Knöpfe links, "Prompt optimieren" immer ganz rechts in der Zeile
-      <Box flexDirection="row" alignItems="center" justifyContent="space-between" width="100%" columnGap={2} flexWrap="nowrap">
-        {await zeile($, e, e.props.isWorking)}
-        <Box flexShrink={0}>{fremd}</Box>
-      </Box>
-    )
-  })
-
+  // Eigene Zeile. Der Prompt-Optimierer hängt "Prompt optimieren" rechts an diese Zeile an
+  // (die Leiste kommt in der Reihenfolge nach dem Optimierer und könnte dessen Zeile nicht übernehmen).
   on('ui.render', { component: 'AbovePrompt' }, async ($, e, next) => {
-    if (e.props.hasSurvey || kombiniert) return next(e)
+    if (e.props.hasSurvey) return next(e)
     return zeile($, e, e.props.isWorking)
   })
 }

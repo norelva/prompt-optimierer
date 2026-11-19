@@ -1,6 +1,6 @@
 {
   "name": "prompt-optimierer",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Knopf über der Chatzeile: formuliert den getippten Prompt in einen klaren, optimalen Prompt um. Bringt die Norelva-Sparen-Leiste mit.",
   "author": {
     "name": "Norelva"
