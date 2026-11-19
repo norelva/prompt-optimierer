@@ -1,0 +1,16 @@
+{
+  "name": "norelva-sparen",
+  "displayName": "Norelva Sparen",
+  "version": "0.1.0",
+  "description": "Senkt den Verbrauch des Nutzungslimits: günstigere Agents für Recherche, Vault-Suche, Textprüfung und lange Ausgaben, ein Skill mit Sparregeln, ein Übergabe-Skill und ein Hinweis bei großen Sitzungen.",
+  "author": {
+    "name": "Norelva"
+  },
+  "license": "MIT",
+  "keywords": [
+    "norelva",
+    "kosten",
+    "limit",
+    "subagents"
+  ]
+}

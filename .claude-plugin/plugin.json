@@ -1,8 +1,13 @@
 {
   "name": "prompt-optimierer",
-  "version": "0.2.0",
-  "description": "Knopf über der Chatzeile: formuliert den getippten Prompt in einen klaren, optimalen Prompt um",
-  "author": { "name": "Norelva" },
+  "version": "0.3.0",
+  "description": "Knopf über der Chatzeile: formuliert den getippten Prompt in einen klaren, optimalen Prompt um. Bringt die Norelva-Sparen-Leiste mit.",
+  "author": {
+    "name": "Norelva"
+  },
   "license": "MIT",
-  "types": "./types/index.d.ts"
+  "types": "./types/index.d.ts",
+  "dependencies": [
+    "norelva-sparen-leiste"
+  ]
 }

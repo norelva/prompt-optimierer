@@ -1,5 +1,24 @@
 {
   "name": "prompt-optimierer",
-  "owner": { "name": "Norelva" },
-  "plugins": [{ "name": "prompt-optimierer", "source": "./" }]
+  "description": "Norelva-Plugins für Claude Code: Prompt-Optimierer, Sparen (günstigere Agents, Übergabe, Hinweise) und die Leiste über der Chatzeile",
+  "owner": {
+    "name": "Norelva"
+  },
+  "plugins": [
+    {
+      "name": "prompt-optimierer",
+      "source": "./",
+      "description": "Knopf über der Chatzeile: formuliert den getippten Prompt in einen klaren, optimalen Prompt um"
+    },
+    {
+      "name": "norelva-sparen",
+      "source": "./plugins/norelva-sparen",
+      "description": "Senkt den Verbrauch des Nutzungslimits: günstigere Agents, Sparregeln, Übergabe in eine neue Sitzung, Hinweis bei großen Sitzungen"
+    },
+    {
+      "name": "norelva-sparen-leiste",
+      "source": "./plugins/norelva-sparen-leiste",
+      "description": "Leiste neben „Prompt optimieren“: Sparen an/aus, Agent-Modell, Übergabe, Kontext und Limits in Prozent"
+    }
+  ]
 }

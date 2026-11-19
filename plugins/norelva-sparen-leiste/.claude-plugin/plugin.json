@@ -1,0 +1,13 @@
+{
+  "name": "norelva-sparen-leiste",
+  "version": "0.1.0",
+  "description": "Leiste über der Chatzeile: Sparmodus an/aus, Modell der Subagents, Kontext- und Limitanzeige, Übergabe-Knopf",
+  "author": {
+    "name": "Norelva"
+  },
+  "types": "./types/index.d.ts",
+  "license": "MIT",
+  "dependencies": [
+    "norelva-sparen"
+  ]
+}
